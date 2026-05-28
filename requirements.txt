@@ -1,0 +1,9 @@
+pyautogui
+pyscreeze
+opencv-python
+mysql-connector-python
+python-dotenv
+pygetwindow
+pywin32
+pillow
+playwright
