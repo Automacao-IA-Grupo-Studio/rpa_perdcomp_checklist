@@ -25,29 +25,29 @@ from src.core.playwright_manager import pw_manager
 pyautogui.FAILSAFE = False
 
 CERTIFICADOS_VALIDOS = [
-    "Studio Varejo",
-    "Space W",
-    "Studio Bank",
-    "Aliança",
-    "Audit Tecnologia",
-    "Studio Store",
-    "Studio Operacional",
-    "Studio Fiscal",
-    "Studio Agro",    
-    "Studio Brokers"
+    "varejo",
+    "spacew",
+    "bank",
+    "law",
+    "audit",
+    "store",
+    "operacional",
+    "fiscal",
+    "agro",    
+    "brokers",
 ]
 
 MAPA_CERTIFICADOS = {
-    "Studio Varejo": 0,
-    "Space W": 1,
-    "Studio Bank": 2,
-    "Aliança": 3,
-    "Audit Tecnologia": 4,
-    "Studio Store": 5,
-    "Studio Operacional": 6,
-    "Studio Fiscal": 7,
-    "Studio Agro": 8,    
-    "Studio Brokers": 9
+    "varejo": 0,
+    "spacew": 1,
+    "bank": 2,
+    "law": 3,
+    "audit": 4,
+    "store": 5,
+    "operacional": 6,
+    "fiscal": 7,
+    "agro": 8,    
+    "brokers": 9
 }
 
 

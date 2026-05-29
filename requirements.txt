@@ -7,3 +7,4 @@ pygetwindow
 pywin32
 pillow
 playwright
+psycopg2

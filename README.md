@@ -11,7 +11,7 @@ O projeto utiliza uma abordagem **híbrida** que combina automação estruturada
 *   **Linguagem Core:** Python 3.x
 *   **Automação Web estruturada:** [Playwright](https://playwright.dev/python/) para navegação robusta, gerenciamento de sessões, interceptação e auto-wait de elementos DOM.
 *   **Automação Visual & UI nativa:** [PyAutoGUI](https://pyautogui.readthedocs.io/) e [OpenCV](https://opencv.org/) (Visão Computacional) para lidar com telas do sistema (pop-ups de Certificado Digital do Windows) e frames seguros inacessíveis pelo DOM.
-*   **Banco de Dados:** MySQL (Fila de processamento, parametrização e histórico).
+*   **Banco de Dados:** PostgreSQL via Supabase (Fila de processamento, parametrização e histórico).
 *   **Concorrência:** Multi-threading para monitoramento assíncrono e estabilização de downloads.
 
 ---
@@ -60,10 +60,11 @@ playwright install
 Crie um arquivo `.env` na raiz do projeto contendo as credenciais de acesso ao seu banco de dados e as configurações de caminho:
 
 ```env
-DB_HOST=seu_host_mysql
+DB_HOST=seu_host_postgres
 DB_USER=seu_usuario
-DB_PASS=sua_senha
+DB_PASSWORD=sua_senha
 DB_NAME=seu_banco
+DB_PORT=5432
 DOCUMENTS_PATH=C:/Caminho/Para/Salvar/Downloads
 ```
 
@@ -94,17 +95,28 @@ graph TD
 
 ## 📝 Controle de Fila e Status (Banco de Dados)
 
-O robô lê a tabela do banco de dados filtrando por `id_tipo_arquivo = 5` (específico para PERDCOMP) e atualiza os status ao longo do ciclo de vida utilizando os seguintes códigos:
+O robô lê a tabela do banco de dados filtrando por `id_tipo_arquivo = 6` (específico para PERDCOMP) e `id_status = 1` (Pendente). Os status são mapeados entre a tabela geral e a tabela detalhe:
 
-| Status | Nome/Etapa | Descrição técnica |
-| :---: | :--- | :--- |
-| **8** | **Acessando** | Iniciou a tentativa de autenticação na plataforma. |
-| **4** | **Processando** | Superou o login e está ativamente localizando e extraindo os PDFs. |
-| **5** | **Sucesso** | Todos os documentos foram baixados e confirmados localmente. |
-| **11** | **Sem Eventos** | Não foram encontrados documentos do tipo PERDCOMP no intervalo de datas. |
-| **6** | **Erro Técnico** | Falha inesperada, perda de comunicação ou imagem de referência não encontrada. |
-| **14** | **Pendência CNPJ** | CNPJ com mensagens de bloqueio na plataforma eCAC. |
-| **15** | **CNPJ Inválido** | CNPJ com erro cadastral ou digitação inválida na solicitação. |
+**Status Gerais (tabela `pjdocs_sol_baixa_arquivos_status`):**
+
+| ID | Descrição |
+| :---: | :--- |
+| **1** | **Pendente** |
+| **2** | **Em Processamento** |
+| **3** | **Concluído** |
+| **4** | **Erro** |
+
+**Status Detalhados (tabela `pjdocs_sol_baixa_arqs_perdcomp`):**
+
+| Status Detalhe | Nome/Etapa | Descrição técnica | Status Geral |
+| :---: | :--- | :--- | :---: |
+| **8** | **Acessando** | Iniciou a tentativa de autenticação na plataforma. | 2 |
+| **4** | **Processando** | Superou o login e está ativamente localizando e extraindo os PDFs. | 2 |
+| **5** | **Sucesso** | Todos os documentos foram baixados e confirmados localmente. | 3 |
+| **11** | **Sem Eventos** | Não foram encontrados documentos do tipo PERDCOMP no intervalo de datas. | 3 |
+| **6** | **Erro Técnico** | Falha inesperada, perda de comunicação ou imagem de referência não encontrada. | 4 |
+| **14** | **Pendência CNPJ** | CNPJ com mensagens de bloqueio na plataforma eCAC. | 4 |
+| **15** | **CNPJ Inválido** | CNPJ com erro cadastral ou digitação inválida na solicitação. | 4 |
 
 ---
 

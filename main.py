@@ -187,7 +187,7 @@ def main():
         logger.error("Falha na conexão com o banco.")
         return
 
-    logger.info("Buscando solicitações pendentes (id_tipo_arquivo = 5, omitindo status 5, 11, 14 e 15)...")
+    logger.info("Buscando solicitações pendentes (id_tipo_arquivo = 6, id_status = 1)...")
     requests = db.buscar_solicitacoes_pendentes()
 
     if not requests:
